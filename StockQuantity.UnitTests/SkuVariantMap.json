@@ -1,0 +1,20 @@
+﻿[
+  {
+    "id": "123",
+    "variantId": 123,
+    "variants": [
+      {
+        "sku": "ABC",
+        "in-Stock": "false"
+      },
+      {
+        "sku": "DEF",
+        "in-Stock": "true"
+      }
+    ]
+  }
+]
+
+// skumap-col
+// on start-up create in memory cache
+// select * from c where c.variantId=123 and c.variants

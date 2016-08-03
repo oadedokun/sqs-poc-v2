@@ -1,0 +1,101 @@
+﻿using System;
+using System.Diagnostics;
+using System.Net;
+using System.Threading;
+using Microsoft.ApplicationInsights;
+using Microsoft.Azure;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.ServiceBus.Messaging;
+using Microsoft.WindowsAzure.ServiceRuntime;
+using StockQuantity.Contracts.Events;
+using StockQuantity.Data;
+using StockQuantity.Worker.Messaging;
+
+namespace StockQuantity.Worker
+{
+    public class WorkerRole : RoleEntryPoint
+    {
+        private TelemetryClient _telemetryClient;
+        private IStockQuantityAggregateStore _stockQuantityAggregateStore;
+        private TopicClient _topicClient;
+        private ConnectionPolicy _connectionPolicy;
+        private SubscriptionClient _subscriptionClient;
+        private int _concurrencyLimit;
+        private readonly ManualResetEvent _completeManualResetEvent = new ManualResetEvent(false);
+        
+        public override void Run()
+        {
+
+            // Initiates the message pump and callback is invoked for each message that is received, calling close on the client will stop the pump.
+            _subscriptionClient.OnMessage(brokeredMessage =>
+            {
+
+                var message = brokeredMessage.GetBody<WarehouseAvailableStockChangedV1>();
+                var warehouseAvailableStockChangedV1Handler =
+                    new WarehouseAvailableStockChangedV1Handler(_topicClient, _stockQuantityAggregateStore, _telemetryClient);
+                warehouseAvailableStockChangedV1Handler.OnMessage(message);
+
+            });
+
+            _completeManualResetEvent.WaitOne();
+
+        }
+
+        
+        public override bool OnStart()
+        {
+            _telemetryClient = new TelemetryClient();
+            _telemetryClient.InstrumentationKey =
+                RoleEnvironment.GetConfigurationSettingValue("APPINSIGHTS_INSTRUMENTATIONKEY");
+            ServicePointManager.DefaultConnectionLimit = Environment.ProcessorCount*12;
+
+            _connectionPolicy = new ConnectionPolicy();
+            _connectionPolicy.PreferredLocations.Add("North Europe"); // first preference
+            _connectionPolicy.PreferredLocations.Add("West Europe"); // second preference 
+            var sqServiceBusConnectionString =
+                CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString.StockQuantity");
+
+            var docDbName = CloudConfigurationManager.GetSetting("Microsoft.DocumentDB.StockQuantity.DBName");
+            var docDbsqColName =
+                CloudConfigurationManager.GetSetting("Microsoft.DocumentDB.StockQuantity.DBCollectionName");
+            var docDbsvColName =
+                CloudConfigurationManager.GetSetting("Microsoft.DocumentDB.SkuVariantMap.DBCollectionName");
+            var docDbEndpointName =
+                CloudConfigurationManager.GetSetting("Microsoft.DocumentDB.StockQuantity.EUN.AccountEndpoint");
+            var docDbEndpointKey =
+                CloudConfigurationManager.GetSetting("Microsoft.DocumentDB.StockQuantity.EUN.AccountKey");
+
+            _concurrencyLimit = Convert.ToInt16(CloudConfigurationManager.GetSetting("MaximumConcurrency"));
+
+            _topicClient = TopicClient.CreateFromConnectionString(sqServiceBusConnectionString);
+
+            _stockQuantityAggregateStore = new StockQuantityAggregateDocDb(docDbName, docDbsqColName, docDbsvColName, docDbEndpointName, docDbEndpointKey, _connectionPolicy);
+
+            var wasServiceBusConnectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock");
+            var wasSubscriptionName = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.SubscritpionName");
+            var wasTopicPath = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.TopicPath");
+
+            _subscriptionClient = SubscriptionClient.CreateFromConnectionString(wasServiceBusConnectionString, wasTopicPath, wasSubscriptionName);
+            
+            return base.OnStart();
+        }
+
+        public override void OnStop()
+        {
+            // Close the connection to Service Bus Queue
+            _completeManualResetEvent.Set();
+
+           _subscriptionClient.Close();
+
+            _topicClient.Close();
+
+            _stockQuantityAggregateStore.Dispose();
+
+            _telemetryClient.Flush();
+
+            Thread.Sleep(1000);
+
+            base.OnStop();
+        }
+    }
+}

@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockQuantity", "StockQuantity\StockQuantity.csproj", "{15C8458E-4AF1-4CED-9C7F-DD7C3AAC0DC9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{07CC7C04-7E8E-4625-AEFE-C5BFF148C3D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockQuantity.Contracts", "StockQuantity.Contracts\StockQuantity.Contracts.csproj", "{471A946B-19DB-48FE-B303-9CA115B09D68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockQuantity.UnitTests", "StockQuantity.UnitTests\StockQuantity.UnitTests.csproj", "{67930EAC-CE59-4F83-893D-660F38D69B96}"
+EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "StockQuantity.CloudService", "StockQuantity.CloudService\StockQuantity.CloudService.ccproj", "{A11AEF76-DEC3-4E1C-8920-F41C473C27EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarehouseAvailableStock.Worker", "WarehouseAvailableStock.Worker\WarehouseAvailableStock.Worker.csproj", "{F46FD3F8-4367-4E7A-AC01-F454A5A9E290}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockQuantity.Worker", "StockQuantity.Worker\StockQuantity.Worker.csproj", "{BCBB8770-BACF-4468-9858-1FDF3EA9DA9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{15C8458E-4AF1-4CED-9C7F-DD7C3AAC0DC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15C8458E-4AF1-4CED-9C7F-DD7C3AAC0DC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15C8458E-4AF1-4CED-9C7F-DD7C3AAC0DC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15C8458E-4AF1-4CED-9C7F-DD7C3AAC0DC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{471A946B-19DB-48FE-B303-9CA115B09D68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{471A946B-19DB-48FE-B303-9CA115B09D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{471A946B-19DB-48FE-B303-9CA115B09D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{471A946B-19DB-48FE-B303-9CA115B09D68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67930EAC-CE59-4F83-893D-660F38D69B96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67930EAC-CE59-4F83-893D-660F38D69B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67930EAC-CE59-4F83-893D-660F38D69B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67930EAC-CE59-4F83-893D-660F38D69B96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A11AEF76-DEC3-4E1C-8920-F41C473C27EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A11AEF76-DEC3-4E1C-8920-F41C473C27EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A11AEF76-DEC3-4E1C-8920-F41C473C27EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A11AEF76-DEC3-4E1C-8920-F41C473C27EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F46FD3F8-4367-4E7A-AC01-F454A5A9E290}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F46FD3F8-4367-4E7A-AC01-F454A5A9E290}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F46FD3F8-4367-4E7A-AC01-F454A5A9E290}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F46FD3F8-4367-4E7A-AC01-F454A5A9E290}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCBB8770-BACF-4468-9858-1FDF3EA9DA9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCBB8770-BACF-4468-9858-1FDF3EA9DA9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCBB8770-BACF-4468-9858-1FDF3EA9DA9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCBB8770-BACF-4468-9858-1FDF3EA9DA9B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{67930EAC-CE59-4F83-893D-660F38D69B96} = {07CC7C04-7E8E-4625-AEFE-C5BFF148C3D5}
+	EndGlobalSection
+EndGlobal

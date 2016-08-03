@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="StockQuantity.CloudService" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="4" osVersion="*" schemaVersion="2015-04.2.6">
+  <Role name="StockQuantity.Worker">
+    <Instances count="2" />
+    <ConfigurationSettings>
+      <Setting name="APPINSIGHTS_INSTRUMENTATIONKEY" value="390d4fe2-ba45-4c79-a467-6a7767a1f326" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=stockquantity;AccountKey=Fue4Uvd4ir9bEbDA/aY2nO6z5GJZWrRVH4w0FtQeXWtGQuqbW20Wh6Hqv01+BiwtcdSJyDSmaE5qosjNbHlTlg==" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock" value="Endpoint=sb://warehouseavailablestock-eun.servicebus.windows.net/;SharedAccessKeyName=manage;SharedAccessKey=Q+4XAa+HbFyq++1FWGsmbaET/menHvXza25hJPa/R70=" />
+      <Setting name="Microsoft.DocumentDB.StockQuantity.DBName" value="stockquantity-db" />
+      <Setting name="Microsoft.DocumentDB.StockQuantity.DBCollectionName" value="stockquantity-col" />
+      <Setting name="Microsoft.DocumentDB.SkuVariantMap.DBCollectionName" value="skuvariantmap-col" />
+      <Setting name="Microsoft.DocumentDB.StockQuantity.EUN.AccountEndpoint" value="https://stockquantity-eun.documents.azure.com:443/" />
+      <Setting name="Microsoft.DocumentDB.StockQuantity.EUN.AccountKey" value="z6By1JuLB7Ja7ESoeGP811Nj8ReNLOjQ42sGtPy1nHglEJlHTdlz89MFHdCG9FGGugc64g4Em8eezFwE4GrZjg==" />
+      <Setting name="MaximumConcurrency" value="4" />
+      <Setting name="SkuVariantMapBatchSize" value="4" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.StockQuantity" value="Endpoint=sb://stockquantity-eun.servicebus.windows.net/;SharedAccessKeyName=manage;SharedAccessKey=Ku+bPcpCT4RJHuYO5H+gK2rc3JICR8+mqvWm9EDq5Xs=;EntityPath=regionstockstatus" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.SubscritpionName" value="stockquantity" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.TopicPath" value="warehouseavailablestocklevels" />
+    </ConfigurationSettings>
+  </Role>
+  <Role name="WarehouseAvailableStock.Worker">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=stockquantity;AccountKey=Fue4Uvd4ir9bEbDA/aY2nO6z5GJZWrRVH4w0FtQeXWtGQuqbW20Wh6Hqv01+BiwtcdSJyDSmaE5qosjNbHlTlg==" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock" value="Endpoint=sb://warehouseavailablestock-eun.servicebus.windows.net/;SharedAccessKeyName=manage;SharedAccessKey=Q+4XAa+HbFyq++1FWGsmbaET/menHvXza25hJPa/R70=;EntityPath=warehouseavailablestocklevels" />
+      <Setting name="Microsoft.DocumentDB.StockQuantity.DBName" value="stockquantity-db" />
+      <Setting name="Microsoft.DocumentDB.StockQuantity.DBCollectionName" value="stockquantity-col" />
+      <Setting name="Microsoft.DocumentDB.SkuVariantMap.DBCollectionName" value="skuvariantmap-col" />
+      <Setting name="Microsoft.DocumentDB.StockQuantity.EUN.AccountEndpoint" value="https://stockquantity-eun.documents.azure.com:443/" />
+      <Setting name="Microsoft.DocumentDB.StockQuantity.EUN.AccountKey" value="z6By1JuLB7Ja7ESoeGP811Nj8ReNLOjQ42sGtPy1nHglEJlHTdlz89MFHdCG9FGGugc64g4Em8eezFwE4GrZjg==" />
+      <Setting name="MaximumConcurrency" value="10" />
+      <Setting name="SkuVariantMapBatchSize" value="100" />
+      <Setting name="APPINSIGHTS_INSTRUMENTATIONKEY" value="390d4fe2-ba45-4c79-a467-6a7767a1f326" />
+    </ConfigurationSettings>
+  </Role>
+</ServiceConfiguration>

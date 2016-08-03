@@ -1,0 +1,44 @@
+﻿{
+  "variantId": 123,
+  "warehouseAvailableStocks": [
+    {
+      "sku": "234",
+      "warehouseId": "FC01",
+      "inStock": 2,
+      "reserved": 1,
+      "allocated": 1,
+      "version": "2016-07-01 T12:30:00:00Z"
+    },
+    {
+      "sku": "234",
+      "warehouseId": "FC03",
+      "inStock": 2,
+      "reserved": 0,
+      "allocated": 0,
+      "version": "2016-07-01T 12:00:00:00Z"
+    },
+    {
+      "sku": "123",
+      "warehouseId": "FC03",
+      "inStock": 2,
+      "reserved": 0,
+      "allocated": 0,
+      "version": "2016-07-01 T12:00:00:00Z"
+    }
+  ],
+  "regionStocks": [
+    {
+      "regionId": "USA",
+      "status": "In-Stock",
+      "availableQuantity": 5,
+      "reservedQuantity": 1
+    },
+    {
+      "regionId": "FR",
+      "status": "In-Stock",
+      "availableQuantity": 5,
+      "reservedQuantity": 1
+    }
+  ],
+  "version": "2016-07-01 T12:00:30:00Z"
+}
