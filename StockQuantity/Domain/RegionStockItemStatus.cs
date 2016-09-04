@@ -8,20 +8,20 @@ using Newtonsoft.Json.Converters;
 
 namespace StockQuantity.Domain
 {
-    public class RegionStockStatus
+    public class RegionStockItemStatus
     {
-        public RegionStockStatus()
+        public RegionStockItemStatus()
         {
             
         }
-        public RegionStockStatus(int lowInStockThreshold, StockStatus status)
+        public RegionStockItemStatus(int lowInStockThreshold, StockStatus status)
         {
             _lowInStockThreshold = lowInStockThreshold;
             Value = status;
             IsChanged = false;
         }
 
-        public RegionStockStatus(int lowInStockThreshold, StockStatus status, bool isChanged)
+        public RegionStockItemStatus(int lowInStockThreshold, StockStatus status, bool isChanged)
         {
             _lowInStockThreshold = lowInStockThreshold;
             Value = status;
@@ -35,7 +35,7 @@ namespace StockQuantity.Domain
 
         [JsonIgnore]
         public bool IsChanged { get; private set; }
-        public RegionStockStatus Evaluate(int quantity)
+        public RegionStockItemStatus Evaluate(int quantity)
         {
             var stockStatus = quantity > 0 && (quantity < _lowInStockThreshold) ? StockStatus.LowInStock
                 : quantity > 0 && (quantity >= _lowInStockThreshold) ? StockStatus.InStock

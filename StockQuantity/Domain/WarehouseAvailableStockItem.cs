@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 
 namespace StockQuantity.Domain
 {
-    public class WarehouseAvailableStock
+    public class WarehouseAvailableStockItem
     {
-        public WarehouseAvailableStock(string fulfilmentCentre, string sku, int pickable, int reserved, int allocated, DateTime version)
+        public WarehouseAvailableStockItem(string fulfilmentCentre, string sku, int pickable, int reserved, int allocated, DateTime version)
         {
             FulfilmentCentre = fulfilmentCentre;
             Sku = sku;
@@ -33,14 +33,15 @@ namespace StockQuantity.Domain
         [JsonProperty("version")]
         public DateTime Version { get; private set; }
 
-        public WarehouseAvailableStock ApplyStockChanges(WarehouseAvailableStock warehouseAvailableStock)
+        public WarehouseAvailableStockItem ApplyStockChanges(WarehouseAvailableStockItem warehouseAvailableStock)
         {
             if (Sku.Equals(warehouseAvailableStock.Sku, StringComparison.OrdinalIgnoreCase) &&
                 FulfilmentCentre.Equals(warehouseAvailableStock.FulfilmentCentre, StringComparison.OrdinalIgnoreCase))
             {
                 if (Version > warehouseAvailableStock.Version)
                 {
-                    throw new StaleWarehouseAvailableStockException();
+                    throw new StaleWarehouseAvailableStockChangedException(
+                        $"Stale Warehouse Available Stock Change encountered for SKU {warehouseAvailableStock.Sku} in Warehouse {warehouseAvailableStock.FulfilmentCentre}");
                 }
 
                 Pickable = warehouseAvailableStock.Pickable;

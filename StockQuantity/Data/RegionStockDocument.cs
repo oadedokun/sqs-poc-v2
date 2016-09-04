@@ -4,14 +4,14 @@ using StockQuantity.Domain;
 
 namespace StockQuantity.Data
 {
-    public class StockQuantity
+    public class RegionStockDocument
     {
-        public StockQuantity()
+        public RegionStockDocument()
         {
             
         }
 
-        public StockQuantity(int variantId, IEnumerable<WarehouseAvailableStock> warehouseAvailableStocks, IEnumerable<RegionStock> regionStocks)
+        public RegionStockDocument(int variantId, IEnumerable<WarehouseAvailableStockItem> warehouseAvailableStocks, IEnumerable<RegionStockItem> regionStocks)
         {
             Id = variantId.ToString();
             VariantId = variantId;
@@ -19,7 +19,7 @@ namespace StockQuantity.Data
             RegionStocks = regionStocks;
         }
 
-        public StockQuantity(int variantId, IEnumerable<WarehouseAvailableStock> warehouseAvailableStocks, IEnumerable<RegionStock> regionStocks, string version)
+        public RegionStockDocument(int variantId, IEnumerable<WarehouseAvailableStockItem> warehouseAvailableStocks, IEnumerable<RegionStockItem> regionStocks, string version)
         {
             Id = variantId.ToString();
             VariantId = variantId;
@@ -35,17 +35,17 @@ namespace StockQuantity.Data
         public int VariantId { get; set; }
 
         [JsonProperty("warehouseAvailableStocks")]
-        public IEnumerable<WarehouseAvailableStock> WarehouseAvailableStocks { get; set; }
+        public IEnumerable<WarehouseAvailableStockItem> WarehouseAvailableStocks { get; set; }
 
         [JsonProperty("regionStocks")]
-        public IEnumerable<RegionStock> RegionStocks { get; set; }
+        public IEnumerable<RegionStockItem> RegionStocks { get; set; }
 
         [JsonProperty("_etag")]
         public string Version { get; set; }
 
-        public static StockQuantity CreateFrom(IStockQuantityAggregate stockQuantityAggregate)
+        public static RegionStockDocument CreateFrom(IRegionStockAggregate stockQuantityAggregate)
         {
-            return new StockQuantity(stockQuantityAggregate.VariantId, stockQuantityAggregate.WarehouseAvailableStocks, stockQuantityAggregate.RegionStocks, stockQuantityAggregate.Version);
+            return new RegionStockDocument(stockQuantityAggregate.VariantId, stockQuantityAggregate.WarehouseAvailableStocks, stockQuantityAggregate.RegionStocks, stockQuantityAggregate.Version);
         }
     }
 }

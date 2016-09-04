@@ -2,9 +2,9 @@
 
 namespace StockQuantity.Data
 {
-    public class SkuVariantMap
+    public class SkuVariantMapDocument
     {
-        public SkuVariantMap()
+        public SkuVariantMapDocument()
         {
             
         }
@@ -14,5 +14,8 @@ namespace StockQuantity.Data
 
         [JsonProperty("variantId")]
         public int VariantId { get; set; }
+
+        [JsonProperty("_etag")]
+        public string Version { get; set; }
     }
 }

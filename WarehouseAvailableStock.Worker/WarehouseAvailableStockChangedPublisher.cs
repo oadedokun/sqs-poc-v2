@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using System.Threading;
 using Microsoft.ApplicationInsights;
 using Microsoft.ServiceBus.Messaging;
 using StockQuantity.Contracts;
@@ -14,14 +15,15 @@ namespace WarehouseAvailableStock.Worker
     public class WarehouseAvailableStockChangedPublisher
     {
         private readonly TopicClient _warehouseAvailableStockTopicClient;
-        private readonly IStockQuantityAggregateStore _stockQuantityStore;
-        private readonly int _maximumConcurrency;
+        private readonly IRegionStockAggregateStore _stockQuantityStore;
+        private readonly int _skuVariantBatchSize;
+        private readonly int _publishBatchSize;
         private readonly TelemetryClient _telemetryClient;
-        private IReadOnlyList<SkuVariantMap> _skuVariantMap;
+        private IReadOnlyList<SkuVariantMapDocument> _skuVariantMap;
         private StockStatus _stockStatus;
         private static string CORRELATION_SLOT = "CORRELATION-ID";
 
-        public WarehouseAvailableStockChangedPublisher(TopicClient warehouseAvailableStockTopicClient, IStockQuantityAggregateStore stockQuantityStore, int batchSize, TelemetryClient telemetryClient)
+        public WarehouseAvailableStockChangedPublisher(TopicClient warehouseAvailableStockTopicClient, IRegionStockAggregateStore stockQuantityStore, int skuVariantBatchSize, int publishBatchSize, TelemetryClient telemetryClient)
         {
             if (warehouseAvailableStockTopicClient == null)
             {
@@ -39,17 +41,18 @@ namespace WarehouseAvailableStock.Worker
             }
             _warehouseAvailableStockTopicClient = warehouseAvailableStockTopicClient;
             _stockQuantityStore = stockQuantityStore;
-            _maximumConcurrency = batchSize;
+            _skuVariantBatchSize = skuVariantBatchSize;
+            _publishBatchSize = publishBatchSize;
             _telemetryClient = telemetryClient;
         }
 
         private void InitialiseSkuVariantCache()
         {
-            _skuVariantMap = _stockQuantityStore.GetSkuVariantMap(_maximumConcurrency);
+            _skuVariantMap = _stockQuantityStore.GetSkuVariantMap(_skuVariantBatchSize);
             _stockStatus = StockStatus.InStock;
         }
-
-        public void Publish()
+        
+        public void PublishWarehouseAvailableStockChanged()
         {
             Stopwatch requestTimer = Stopwatch.StartNew();
             var requestTelemetry = RequestTelemetryHelper.Start("Batch Publish Rate", DateTime.UtcNow);
@@ -98,13 +101,35 @@ namespace WarehouseAvailableStock.Worker
                         break;
                 }
 
-                var brokeredMessages =
+                var fc01BrokeredMessages =
                     _skuVariantMap.Select(x => new BrokeredMessage(new WarehouseAvailableStockChangedV1("FC01", x.SKU, pickable, reserved, allocated,
                         DateTime.UtcNow))).ToList();
 
-                requestTelemetry.Metrics.Add(new KeyValuePair<string, double>("WarehouseAvailableStockChangedV1 Message Count", brokeredMessages.Count));
-                _warehouseAvailableStockTopicClient.SendBatch(brokeredMessages);
-                RequestTelemetryHelper.Dispatch(_telemetryClient, requestTelemetry, requestTimer.Elapsed, true);
+                var fc04BrokeredMessages =
+                    _skuVariantMap.Select(x => new BrokeredMessage(new WarehouseAvailableStockChangedV1("FC04", x.SKU, pickable, reserved, allocated,
+                        DateTime.UtcNow))).ToList();
+
+                for (var index = _publishBatchSize; index <= fc01BrokeredMessages.Count; index=+_publishBatchSize)
+                {
+                    var batchedBrokeredMessages = fc01BrokeredMessages.GetRange(index, _publishBatchSize);
+                    if (batchedBrokeredMessages.Any())
+                    {
+                        _warehouseAvailableStockTopicClient.SendBatch(batchedBrokeredMessages);
+                        Thread.Sleep(1000);
+                        RequestTelemetryHelper.Dispatch(_telemetryClient, requestTelemetry, requestTimer.Elapsed, true);
+                    }
+                }
+
+                for (var index = _publishBatchSize; index <= fc04BrokeredMessages.Count; index = +_publishBatchSize)
+                {
+                    var batchedBrokeredMessages = fc04BrokeredMessages.GetRange(index, _publishBatchSize);
+                    if (batchedBrokeredMessages.Any())
+                    {
+                        _warehouseAvailableStockTopicClient.SendBatch(batchedBrokeredMessages);
+                        Thread.Sleep(1000);
+                        RequestTelemetryHelper.Dispatch(_telemetryClient, requestTelemetry, requestTimer.Elapsed, true);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -115,6 +140,26 @@ namespace WarehouseAvailableStock.Worker
                 }
                 Trace.TraceError(err, ex);
                 RequestTelemetryHelper.Dispatch(_telemetryClient, requestTelemetry, requestTimer.Elapsed, false);
+            }
+        }
+
+        public void PublishVariantCopyCompleted()
+        {
+            foreach (var skuVariantMap in _skuVariantMap)
+            {
+                var brokeredMessage = new BrokeredMessage(new VariantCopyCompletedV1(skuVariantMap.VariantId, skuVariantMap.SKU));
+                brokeredMessage.Properties.Add("IsVariantSku", 1);
+                _warehouseAvailableStockTopicClient.Send(brokeredMessage);
+            }
+        }
+
+        public void PublishRestrictionAttributesAccepted()
+        {
+            foreach (var skuVariantMap in _skuVariantMap)
+            {
+                var brokeredMessage = new BrokeredMessage(new RestrictionAttributesAcceptedV1(skuVariantMap.SKU, new[] {"HAZMAT"}));
+                brokeredMessage.Properties.Add("IsVariantSku", 1);
+                _warehouseAvailableStockTopicClient.Send(brokeredMessage);
             }
         }
     }

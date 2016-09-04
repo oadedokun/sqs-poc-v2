@@ -6,51 +6,40 @@ using Newtonsoft.Json.Converters;
 
 namespace StockQuantity.Domain
 {
-    public class RegionStock
+    public class RegionStockItem
     {
-        public RegionStock()
+        public RegionStockItem()
         {
             
         }
 
-        public RegionStock(string region, int quantity, RegionStockStatus status, IEnumerable<WarehouseAvailableStock> warehouseAvailableStocks)
+        public RegionStockItem(string region, int quantity, RegionStockItemStatus status, IEnumerable<WarehouseAvailableStockItem> warehouseAvailableStocks, DateTime version)
         {
             Region = region;
             Quantity = quantity;
             Status = status;
             _warehouseAvailableStocks = warehouseAvailableStocks.ToList();
+            Version = version;
         }
 
-        public RegionStock(string region, int variantId, int quantity, RegionStockStatus status, IEnumerable<WarehouseAvailableStock> warehouseAvailableStocks)
-        {
-            Region = region;
-            VariantId = variantId;
-            Quantity = quantity;
-            Status = status;
-            _warehouseAvailableStocks = warehouseAvailableStocks.ToList();
-        }
-
-        private List<WarehouseAvailableStock> _warehouseAvailableStocks;
+        private List<WarehouseAvailableStockItem> _warehouseAvailableStocks;
 
         [JsonProperty("regionId")]
         public string Region { get; }
-
-        [JsonProperty("variantId")]
-        public int VariantId { get; }
 
         [JsonProperty("quantity")]
         public int Quantity { get; private set; }
 
         [JsonProperty("status")]
-        public RegionStockStatus Status { get; private set; }
+        public RegionStockItemStatus Status { get; private set; }
 
         [JsonProperty("version")]
         public DateTime Version { get; private set; }
         
         [JsonIgnore]
-        public IReadOnlyList<WarehouseAvailableStock> WarehouseAvailableStocks => _warehouseAvailableStocks;
+        public IReadOnlyList<WarehouseAvailableStockItem> WarehouseAvailableStocks => _warehouseAvailableStocks;
 
-        public RegionStock ApplyStockChanges(WarehouseAvailableStock warehouseAvailableAvailableStock)
+        public RegionStockItem ApplyStockChanges(WarehouseAvailableStockItem warehouseAvailableAvailableStock)
         {
             if (warehouseAvailableAvailableStock == null)
             {
@@ -77,14 +66,14 @@ namespace StockQuantity.Domain
             }
             else
             {
-                _warehouseAvailableStocks = new List<WarehouseAvailableStock> { warehouseAvailableAvailableStock };
+                _warehouseAvailableStocks = new List<WarehouseAvailableStockItem> { warehouseAvailableAvailableStock };
             }
 
             Quantity = WarehouseAvailableStocks.Sum(x => x.Pickable - (x.Allocated + x.Reserved));
 
             if (Status == null)
             {
-                Status = new RegionStockStatus(10, StockStatus.OutOfStock);
+                Status = new RegionStockItemStatus(10, StockStatus.OutOfStock);
             }
 
             Status.Evaluate(Quantity);

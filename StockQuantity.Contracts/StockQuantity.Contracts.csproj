@@ -44,9 +44,13 @@
     <Compile Include="Events\IMessageV1.cs" />
     <Compile Include="Events\IRegionStockChangedV1.cs" />
     <Compile Include="Events\IRegionStockStatusChangedV1.cs" />
+    <Compile Include="Events\IRestrictionAttributesAcceptedV1.cs" />
+    <Compile Include="Events\IVariantCopyCompletedV1.cs" />
     <Compile Include="Events\IWarehouseAvailableStockChangedV1.cs" />
     <Compile Include="Events\RegionStockStatusChangedV1.cs" />
     <Compile Include="Events\RegionStockChangedV1.cs" />
+    <Compile Include="Events\RestrictionAttributesAcceptedV1.cs" />
+    <Compile Include="Events\VariantCopyCompletedV1.cs" />
     <Compile Include="Events\WarehouseAvailableStockChangedV1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockStatus.cs" />

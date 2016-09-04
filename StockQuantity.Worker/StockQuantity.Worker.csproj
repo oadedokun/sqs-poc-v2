@@ -34,6 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CacheManager.Core, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.9.0\lib\net45\CacheManager.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\StockQuantity\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
@@ -79,6 +83,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
@@ -97,6 +102,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Messaging\MessageReceiver.cs" />
+    <Compile Include="Messaging\RestrictionAttributesAcceptedV1Handler.cs" />
+    <Compile Include="Messaging\RestrictionAttributesAcceptedReceiver.cs" />
+    <Compile Include="Messaging\VariantCopyCompletedReceiver.cs" />
+    <Compile Include="Messaging\VariantCopyCompletedV1Handler.cs" />
+    <Compile Include="Messaging\WarehouseAvailableStockChangedReceiver.cs" />
     <Compile Include="Messaging\IMessageHandler.cs" />
     <Compile Include="Messaging\WarehouseAvailableStockChangedV1Handler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

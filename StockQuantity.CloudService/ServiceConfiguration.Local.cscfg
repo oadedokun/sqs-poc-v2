@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ServiceConfiguration serviceName="StockQuantity.CloudService" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="4" osVersion="*" schemaVersion="2015-04.2.6">
   <Role name="StockQuantity.Worker">
-    <Instances count="2" />
+    <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="APPINSIGHTS_INSTRUMENTATIONKEY" value="390d4fe2-ba45-4c79-a467-6a7767a1f326" />
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=stockquantity;AccountKey=Fue4Uvd4ir9bEbDA/aY2nO6z5GJZWrRVH4w0FtQeXWtGQuqbW20Wh6Hqv01+BiwtcdSJyDSmaE5qosjNbHlTlg==" />
@@ -11,12 +11,26 @@
       <Setting name="Microsoft.DocumentDB.SkuVariantMap.DBCollectionName" value="skuvariantmap-col" />
       <Setting name="Microsoft.DocumentDB.StockQuantity.EUN.AccountEndpoint" value="https://stockquantity-eun.documents.azure.com:443/" />
       <Setting name="Microsoft.DocumentDB.StockQuantity.EUN.AccountKey" value="z6By1JuLB7Ja7ESoeGP811Nj8ReNLOjQ42sGtPy1nHglEJlHTdlz89MFHdCG9FGGugc64g4Em8eezFwE4GrZjg==" />
-      <Setting name="MaximumConcurrency" value="4" />
-      <Setting name="SkuVariantMapBatchSize" value="4" />
-      <Setting name="Microsoft.ServiceBus.ConnectionString.StockQuantity" value="Endpoint=sb://stockquantity-eun.servicebus.windows.net/;SharedAccessKeyName=manage;SharedAccessKey=Ku+bPcpCT4RJHuYO5H+gK2rc3JICR8+mqvWm9EDq5Xs=;EntityPath=regionstockstatus" />
-      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.SubscritpionName" value="stockquantity" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.StockQuantity" value="Endpoint=sb://stockquantity-eun.servicebus.windows.net/;SharedAccessKeyName=manage;SharedAccessKey=Ku+bPcpCT4RJHuYO5H+gK2rc3JICR8+mqvWm9EDq5Xs=" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.SubscriptionName" value="stockquantity" />
       <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.TopicPath" value="warehouseavailablestocklevels" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.StockQuantity.TopicPath" value="regionstockstatus" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.StockQuantity.DiscardedEventsSubscription" value="discardedwarehouseavailablestock" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.StockQuantity.ProductCatalogueSubscription" value="productcatalogue" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.VariantSkuMapSubscription" value="variantskumap" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.StockQuantitySubscription" value="stockquantity" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.RestrictionSubscription" value="restrictions" />
+      <Setting name="MaximumConcurrency" value="16" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="sqsadmin" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEEAr10vgYcuxSzr/gXSR2gcwDQYJKoZIhvcNAQEBBQAEggEAAvpqylqNIIcEPPrX8UgB7HmXDo1R3qJ6aSVOUwchUTWrGAQqci5yggFudTu4GUNY0CdR8Tm7yFhyM5oiyBP10WPJbkn3Hc17jzQKElvPIb+1XWmRmmPAcAOoOZbmV9EzuUGdPS4FxO42Ne4n55oQ9pKAIQb3XTEzHYpmNrKu/e6rk9VtXGkxFnvqhnyqKKBedlCMwHrobat4gn3NX2+tr9Xz8bx8W4aGP5FKgLKKTaCBQjHyxKwYrsikZ9lEMeZi6JWgFK5T4fpOelUjxm7IOuCUllKpzu201QuSCNlhMJ8fHFnqwnC3PPQd4rbdsmg/rDPA4SIwy7hzl8SY3Ls3QTAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECHolmts1gkjVgBBnldC4v46yq+jcAsh2kxTb" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2017-08-08T23:59:59.0000000+01:00" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
+      <Setting name="SkuVariantMapBatchSize" value="1000" />
     </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="80D4A68C7273215815AEF6D6AFC2FF29292A4724" thumbprintAlgorithm="sha1" />
+    </Certificates>
   </Role>
   <Role name="WarehouseAvailableStock.Worker">
     <Instances count="1" />
@@ -28,9 +42,16 @@
       <Setting name="Microsoft.DocumentDB.SkuVariantMap.DBCollectionName" value="skuvariantmap-col" />
       <Setting name="Microsoft.DocumentDB.StockQuantity.EUN.AccountEndpoint" value="https://stockquantity-eun.documents.azure.com:443/" />
       <Setting name="Microsoft.DocumentDB.StockQuantity.EUN.AccountKey" value="z6By1JuLB7Ja7ESoeGP811Nj8ReNLOjQ42sGtPy1nHglEJlHTdlz89MFHdCG9FGGugc64g4Em8eezFwE4GrZjg==" />
-      <Setting name="MaximumConcurrency" value="10" />
-      <Setting name="SkuVariantMapBatchSize" value="100" />
+      <Setting name="SkuVariantMapBatchSize" value="1000" />
       <Setting name="APPINSIGHTS_INSTRUMENTATIONKEY" value="390d4fe2-ba45-4c79-a467-6a7767a1f326" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="sqsadmin" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEEAr10vgYcuxSzr/gXSR2gcwDQYJKoZIhvcNAQEBBQAEggEAAvpqylqNIIcEPPrX8UgB7HmXDo1R3qJ6aSVOUwchUTWrGAQqci5yggFudTu4GUNY0CdR8Tm7yFhyM5oiyBP10WPJbkn3Hc17jzQKElvPIb+1XWmRmmPAcAOoOZbmV9EzuUGdPS4FxO42Ne4n55oQ9pKAIQb3XTEzHYpmNrKu/e6rk9VtXGkxFnvqhnyqKKBedlCMwHrobat4gn3NX2+tr9Xz8bx8W4aGP5FKgLKKTaCBQjHyxKwYrsikZ9lEMeZi6JWgFK5T4fpOelUjxm7IOuCUllKpzu201QuSCNlhMJ8fHFnqwnC3PPQd4rbdsmg/rDPA4SIwy7hzl8SY3Ls3QTAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECHolmts1gkjVgBBnldC4v46yq+jcAsh2kxTb" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2017-08-08T23:59:59.0000000+01:00" />
+      <Setting name="PublishBatchSize" value="100" />
     </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="80D4A68C7273215815AEF6D6AFC2FF29292A4724" thumbprintAlgorithm="sha1" />
+    </Certificates>
   </Role>
 </ServiceConfiguration>

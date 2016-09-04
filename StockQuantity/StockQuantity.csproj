@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CacheManager.Core, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.9.0\lib\net45\CacheManager.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Azure.Documents.Client, Version=1.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Azure.DocumentDB.1.9.2\lib\net45\Microsoft.Azure.Documents.Client.dll</HintPath>
       <Private>True</Private>
@@ -51,19 +55,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\IStockQuantityAggregateStore.cs" />
-    <Compile Include="Data\SkuVariantMap.cs" />
-    <Compile Include="Data\StockQuantity.cs" />
+    <Compile Include="Data\IRegionStockAggregateStore.cs" />
+    <Compile Include="Data\SkuVariantCacheManager.cs" />
+    <Compile Include="Data\SkuVariantMapDocument.cs" />
+    <Compile Include="Data\RegionStockDocument.cs" />
+    <Compile Include="Data\DuplicateResourceKeyException.cs" />
     <Compile Include="Domain\InvalidWarehouseAvailableStockException.cs" />
-    <Compile Include="Domain\RegionStock.cs" />
-    <Compile Include="Domain\RegionStockStatus.cs" />
-    <Compile Include="Domain\IStockQuantityAggregate.cs" />
-    <Compile Include="Domain\StaleWarehouseAvailableStockException.cs" />
-    <Compile Include="Domain\StockQuantityAggregate.cs" />
-    <Compile Include="Domain\WarehouseAvailableStock.cs" />
+    <Compile Include="Data\OptimisticConcurrencyException.cs" />
+    <Compile Include="Domain\RegionStockItem.cs" />
+    <Compile Include="Domain\RegionStockAggregateNotFoundException.cs" />
+    <Compile Include="Domain\RegionStockItemStatus.cs" />
+    <Compile Include="Domain\IRegionStockAggregate.cs" />
+    <Compile Include="Data\ResourceNotFoundException.cs" />
+    <Compile Include="Domain\RegionRestriction.cs" />
+    <Compile Include="Domain\StaleWarehouseAvailableStockChangedException.cs" />
+    <Compile Include="Domain\RegionStockAggregate.cs" />
+    <Compile Include="Domain\WarehouseAvailableStockItem.cs" />
+    <Compile Include="Data\WarehouseRegion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Domain\StockStatus.cs" />
-    <Compile Include="Data\StockQuantityAggregateDocDb.cs" />
+    <Compile Include="Data\RegionStockAggregateDocumentStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

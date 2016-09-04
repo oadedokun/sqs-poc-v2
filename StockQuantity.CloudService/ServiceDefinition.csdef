@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ServiceDefinition name="StockQuantity.CloudService" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2015-04.2.6">
-  <WorkerRole name="StockQuantity.Worker" vmsize="Large">
+  <WorkerRole name="StockQuantity.Worker" vmsize="Standard_D1">
     <ConfigurationSettings>
       <Setting name="APPINSIGHTS_INSTRUMENTATIONKEY" />
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
@@ -10,14 +10,24 @@
       <Setting name="Microsoft.DocumentDB.SkuVariantMap.DBCollectionName" />
       <Setting name="Microsoft.DocumentDB.StockQuantity.EUN.AccountEndpoint" />
       <Setting name="Microsoft.DocumentDB.StockQuantity.EUN.AccountKey" />
-      <Setting name="MaximumConcurrency" />
-      <Setting name="SkuVariantMapBatchSize" />
       <Setting name="Microsoft.ServiceBus.ConnectionString.StockQuantity" />
-      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.SubscritpionName" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.SubscriptionName" />
       <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.TopicPath" />
+      <Setting name="MaximumConcurrency" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.VariantSkuMapSubscription" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.StockQuantity.DiscardedEventsSubscription" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.StockQuantitySubscription" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.StockQuantity.ProductCatalogueSubscription" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.StockQuantity.TopicPath" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock.RestrictionSubscription" />
+      <Setting name="SkuVariantMapBatchSize" />
     </ConfigurationSettings>
+    <Imports>
+      <Import moduleName="RemoteAccess" />
+      <Import moduleName="RemoteForwarder" />
+    </Imports>
   </WorkerRole>
-  <WorkerRole name="WarehouseAvailableStock.Worker" vmsize="Small">
+  <WorkerRole name="WarehouseAvailableStock.Worker" vmsize="Standard_D1">
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
       <Setting name="Microsoft.ServiceBus.ConnectionString.WarehouseAvailableStock" />
@@ -26,9 +36,12 @@
       <Setting name="Microsoft.DocumentDB.SkuVariantMap.DBCollectionName" />
       <Setting name="Microsoft.DocumentDB.StockQuantity.EUN.AccountEndpoint" />
       <Setting name="Microsoft.DocumentDB.StockQuantity.EUN.AccountKey" />
-      <Setting name="MaximumConcurrency" />
       <Setting name="SkuVariantMapBatchSize" />
       <Setting name="APPINSIGHTS_INSTRUMENTATIONKEY" />
+      <Setting name="PublishBatchSize" />
     </ConfigurationSettings>
+    <Imports>
+      <Import moduleName="RemoteAccess" />
+    </Imports>
   </WorkerRole>
 </ServiceDefinition>
